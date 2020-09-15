@@ -35,10 +35,29 @@ known ground truth for testing.
 For further information on the library functions and their use, see the
 User Guide and the Function Reference (included in this repository).
 
-The following directories contain other resources:
+## Documentation
 
-* manual -- LaTeX build directory for project documentation. Use `make -C manual` to build it.
-* sample-minimal -- Minimal working examples of programs that use the libraries.
+The following directories contain documentation:
+
+* manual -- LaTeX build directory for project documentation.
+Use `make -C manual` to build it.
+
+## Sample Code
+
+The following directories contain sample code. Note that these also expect
+the library directories to exist, and usually need specific input and
+output directories and/or specific data files. All such directories and
+files are listed at the top of the sample scripts, or in an "init" script
+called by the main script (for larger sample projects).
+
+* sample-minimal --
+Minimum working examples of programs that use the libraries.
+
+* sample-ft --
+More sophisticated examples of programs that use Field Trip data structure
+conventions. Entry points are `do_ft_synth.m`, `do_ft_thilo.m`, and
+`do_ft_custom.m`. Configuration parameters and common initialization code
+are in `do_ft_init.m`.
 
 
 This is the end of the file.
