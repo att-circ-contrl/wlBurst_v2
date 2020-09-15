@@ -1,0 +1,38 @@
+% Womelsdorf Lab burst library function reference - Overview
+% Written by Christopher Thomas.
+
+\chapter{Overview}
+\label{sect-over}
+
+The wlBurst library functions are divided into several categories:
+\begin{itemize}
+%
+\item \textbf{``Processing''} functions (ch. \ref{sect-proc}) perform
+segmentation, feature extraction, and other operations on single data
+traces. Events detected are returned as ``event lists''.
+%
+\item \textbf{``Field Trip''} functions (ch. \ref{sect-ft}) perform event
+detection and other operations on Field Trip raw data structures. Events
+detected are returned as ``event matrices''. Functions that further process
+these event matrices are also provided in this category.
+%
+\item \textbf{``Synthesis''} functions (ch. \ref{sect-synth}) construct
+simulated LFP oscillation events based on supplied parameters. These
+functions are also used when reconstructing nominal detected oscillation
+waveforms from curve-fit parameters.
+%
+\item \textbf{``Auxiliary''} functions (ch. \ref{sect-aux}) perform
+manipulations that don't fall into the previous categories.
+%
+\item \textbf{``Plotting''} functions (ch. \ref{sect-plot}) produce rough
+plots of various types of data. These are included as part of the sample
+code and as an aid to rapid prototyping; the output is generally not
+publication-ready.
+%
+\end{itemize}
+
+Several types of structure and several types of function handle are used by
+the library functions. These are described in Chapter \ref{sect-formats}.
+
+%
+% This is the end of the file.
