@@ -1,0 +1,92 @@
+Parameter extraction algorithm configuration structures have a mandatory
+field "type", with additional fields that depend on the algorithm specified
+by the "type" field.
+
+Algorithm-specific arguments are as follows:
+
+
+
+== "groundtruth" type:
+
+Parameters are known a priori.
+
+
+
+== "default" type:
+
+The wlProc library is to replace this with a configuration of its choice.
+FIXME - NYI.
+
+
+
+== "custom" type:
+
+This wraps a user-specified parameter extraction function.
+
+"paramfunc":  A function handle with the form:
+  [ newevents, auxdata ] = paramfunc( oldevents, waves, samprate, paramconfig )
+
+The function handle is passed a copy of this structure as its "paramconfig"
+argument, allowing additional parameters to be passed.
+
+Function arguments are:
+  "oldevents":  The list of events produced by segmentation. Only the
+    "sampstart" and "duration" fields are guaranteed to exist.
+  "waves":  The list of derived waveforms produced by segmentation. Which
+    of these exist depends on the segmentation algorithm. These typically
+    include a band-pass-filtered waveform and its Hilbert transform
+    magnitude, phase, and frequency series.
+  "samprate":  The number of samples per second in the signal data.
+  "paramconfig":  A copy of this structure, containing additional parameters.
+
+Function return values are:
+  "newevents":  An updated list of events with remaining fields filled in.
+  "auxdata":  A structure containing additional statistics or diagnostic
+    data. This structure may be empty.
+
+
+
+== "grid" type:
+
+Amplitude envelope roll-on and roll-off are fit using a coarse grid search.
+For a given roll-on and roll-off, magnitude and frequency are curve-fit.
+Endpoints are kept fixed.
+
+"gridsteps":  The number of intermediate time points tested as roll-on and
+              roll-off endpoints.
+
+The number of cases tested goes up as the square of "gridsteps".
+
+
+== "annealamp" type:
+
+Perform "grid" for a coarse fit, then use simulated annealing on the envelope
+to fit it to the analytic signal magnitude signal.
+
+"gridsteps":   The number of intermediate time points for the "grid" fit.
+"matchfreq":   The maximum allowed frequency ratio between original and
+               perturbed events.
+"matchamp:     The maximum allowed peak-amplitude ratio between original and
+               perturbed events.
+"matchlength": The maximum allowed length ratio between original and perturbed
+               events.
+"matcholap":   The minimum fraction of the shorter event that must be covered
+               by the larger event, between original and perturbed events.
+"tunnelmax":   The maximum number of consecutive unproductive perturbation
+               attempts that can be made before annealing is assumed to have
+               converged.
+"totalmax":    The maximum number of perturbation attempts that can be made
+               in total while annealing one event record.
+
+
+== "annealboth" type:
+
+Perform "grid" for a coarse fit, then use simulated annealing on the envelope
+to fit it to the analytic signal magnitude signal, then use simulated
+annealing on amplitude and frequency to fit the event and signal waveforms.
+
+Arguments are identical to "annealamp".
+
+
+
+This is the end of the file.

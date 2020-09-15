@@ -1,0 +1,57 @@
+Events are described by structures with the following fields. Some of these
+may be omitted, depending on the function producing the event list:
+
+
+"sampstart":  Sample index in the original recording waveform corresponding
+              to burst time 0.
+"duration":   Time between nominal 50% roll-on and 50% roll-off for the burst.
+
+"s1":         Sample index in "wave" of nominal start (time 0, 50% of roll-on).
+"s2":         Sample index in "wave" of nominal stop (50% of roll-off).
+"samprate":   Samples per second in the stored waveforms.
+
+"snr":        Nominal signal-to-noise ratio for this burst, in dB.
+
+Curve-fit parameters:
+
+"paramtype":  Type of parameter fit performed. For now, "chirpramp".
+
+"f1":         Burst frequency at nominal start.
+"f2":         Burst frequency at nominal stop.
+"a1":         Envelope amplitude at nominal start.
+"a2":         Envelope amplitude at nominal stop.
+"p1":         Phase at nominal start.
+"p2":         Phase at nominal stop.
+
+"rollon":     Duration of the envelope's curve-fit cosine roll-on time.
+"rolloff":    Duration of the envelope's curve-fit cosine roll-off time.
+"ftype":      Frequency ramp type ("linear" or "logarithmic").
+"atype":      Amplitude ramp type ("linear" or "logarithmic").
+
+Curve-fit waveform:
+
+"times":      [1xN] array of burst sample times, relative to start time.
+"wave":       [1xN] array of nominal (curve-fit) burst waveform samples.
+"mag":        [1xN] array of nominal envelope magnitude samples.
+"freq":       [1xN] array of nominal instantaneous frequency samples.
+"phase":      [1xN] array of nominal instantaneous phase samples (in radians).
+
+Auxiliary waveforms (optional; typically algorithm-specific):
+
+"auxwaves":   Structure containing fields that each contain a signal.
+
+  Signal labels are arbitrary but typically have the following forms:
+
+  "FOOtimes":    [1xN] array with signal FOO's sample times (relative).
+  "FOOwave":     [1xN] array with signal FOO's waveform samples.
+  "FOOmag":      [1xN] array with signal FOO's instantaneous magnitude.
+  "FOOfreq":     [1xN] array with signal FOO's instantaneous frequency.
+  "FOOphase" :   [1xN] array with signal FOO's instantaneous phase.
+
+Auxiliary metadata (optional; typically algorithm-specific):
+
+"auxdata":   Structure containing algorithm-specific event metadata.
+
+  Metadata labels are arbitrary but typically have the following form:
+
+  "FOOstat":     Statistic "stat" for algorithm/processing step "FOO".

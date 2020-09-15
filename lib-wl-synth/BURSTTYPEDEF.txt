@@ -1,0 +1,19 @@
+wlSynth_traceAddBursts() generates oscillatory bursts with randomly varied
+parameters. The range of possible values for these parameters is specified
+by "burst type definition" structures, with the following fields:
+
+"rate":                   Average number of bursts per second.
+"snrrange": [min max]     Signal-to-noise ratio of bursts, in dB.
+"noiseband": [min max]    Frequency band in which noise power is measured.
+"durrange": [min max]     Burst duration in cycles (at average frequency).
+"fctrrange": [min max]    Burst nominal center frequency.
+"framprange": [min max]   Ratio of ending/starting frequency.
+"aramprange": [min max]   Ratio of ending/starting amplitude.
+
+Burst events of a given type are treated as a Poisson point process with the
+specified rate. For each event, parameters are chosen randomly within the
+specified ranges.
+
+SNR in decibels is drawn using a uniform distribution. All other parameters
+are drawn using a log distribution (the logarithm of the parameter values
+has a uniform distribution). This handles diverse scales well.

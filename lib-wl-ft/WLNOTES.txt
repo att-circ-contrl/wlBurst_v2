@@ -1,0 +1,93 @@
+In addition to the raw field trip structures, the wlFT wrapper routines
+produce a "wlnotes" structure containing additional metadata. Contents
+are described below.
+
+
+"wlnotes.bandinfo" is an array of structures containing band definitions:
+
+- "band" [ min max ] contains the frequency limits of the band.
+- "name" is a character array containing a human-readable band name.
+- "label" is a unique filename-safe character string identifying the band.
+
+
+"wlnotes.wavesbybandandtrial{bidx,tidx,cidx}" is a cell array containing
+structures that contain diagnostic waveforms. These waveforms are derived
+from the original trial data and represent intermediate processing steps.
+Different analyses will produce different sets of diagnostic waveforms.
+
+wlBurst event records that are annotated with "context" typically have
+corresponding portions of these signals in their "auxwaves" structures.
+wlBurst event matrices store these in the "waves" cell array.
+
+- "ftwave" is the original wideband trial waveform.
+- "fttimes" contains original timestamps associated with "ftwave" data.
+
+- "bpfwave" is the band-pass-filtered trial waveform.
+- "bpf(mag|freq|phase)" are analytic signals derived from "bpfwave", from
+  analyses that use the Hilbert transform.
+
+- "magpower(fast|slow)" are low-pass-filtered squared magnitudes computed
+  from the analytic magnitude of the signal, from analyses that use
+  magnitude-based detection.
+
+- "noisywave" is a copy of "bpfwave" with high-frequency noise added, from
+  analyses that use frequency-stability detection.
+- "noisy(mag|freq|phase)" are analytic signals derived from "noisywave",
+  from analyses that use frequency-stability detection.
+- "fvar(fast|slow)" are low-pass-filtered versions of the squared magnitude
+  of the AC component of "noisyfreq". These represent the instantaneous
+  variance of "noisyfreq" averaged over narrow and wide time windows.
+
+
+"wlnotes.trialinfo_label" is a cell array of character arrays containing
+labels for columns in the "trialinfo" metadata structure. Metadata present
+depends on the analyses performed.
+
+wlBurst event records typically store some or all of this metadata in their
+"auxdata" structures (aside from curve-fit event parameters, which are
+stored as top-level event record fields). wlBurst event matrices store this
+in the "auxdata" cell array. In wlBurst event and event matrix structures,
+the string "ft_" is prepended to the labels associated with these fields
+(i.e. "ft_sampstart" in auxdata, vs "sampstart" in wlnotes).
+
+Metadata that is always present:
+
+- "sampstart" is a duplicate of "sampleinfo(trial,1)".
+- "sampend" is a duplicate of "sampleinfo(trial,2)".
+- "trialnum" is the original-data trial in which this event occurred.
+- "channelnum" is the original-data channel in which this event occurred.
+- "bandnum" is the index of the detection band within "bandinfo".
+- "bandmin" is a duplicate of "bandinfo.band(1)".
+- "bandmax" is a duplicate of "bandinfo.band(2)".
+- "eventnum" is the event number within this trial, channel, and band.
+
+Event detection metadata:
+
+- "detthresh" is the minimum peak power or variance excursion for event
+  detection, in dB.
+- "trial_bpf_rms" is the RMS amplitude of the band-pass-filtered version
+  of the original trial ("bpfwave" in "wavesbybandandtrial").
+- "event_rms" is the RMS amplitude of the reconstructed event.
+- "event_max" is the maximum absolute amplitude of the reconstructed event.
+
+Cropped trial metadata:
+
+- "roistart" is the first copied sample location in the un-cropped trial.
+- "roistop" is the last copied sample location in the un-cropped trial.
+
+Parameter fit metadata:
+
+- "f1" is the curve-fit frequency at 50% roll-on.
+- "f2" is the curve-fit frequency at 50% roll-off.
+- "a1" is the curve-fit envelope magnitude at 50% roll-on.
+- "a2" is the curve-fit envelope magnitude at 50% roll-off.
+- "p1" is the curve-fit phase at 50% roll-on.
+- "p2" is the curve-fit phase at 50% roll-off.
+- "rollon" is the duration of roll-on, in seconds.
+- "rolloff" is the duration of roll-off, in seconds.
+- "duration" is the time between 50% roll-on and 50% roll-off, in seconds.
+
+
+"wlnotes.segconfigbyband{bidx}" and "wlnotes.paramconfigbyband{bidx}" store
+the algorithm tuning parameters used for segmentation and parameter
+extraction of events in the various frequency bands, respectively.

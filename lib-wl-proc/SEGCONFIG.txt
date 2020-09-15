@@ -1,0 +1,108 @@
+Segmentation algorithm configuration structures have a mandatory field
+"type", with additional fields that depend on the algorithm specified by the
+"type" field.
+
+Algorithm-specific arguments are as follows:
+
+
+
+== "groundtruth" type:
+
+Segments are known a priori.
+
+
+
+== "default" type:
+
+The wlProc library is to replace this with a configuration of its choice.
+FIXME - NYI.
+
+
+
+== "custom" type:
+
+This wraps a user-specified segmentation function.
+
+"segmentfunc":  A function handle with the form:
+  [ events, waves ] = segmentfunc( wavedata, samprate, bpfband, segconfig )
+
+The function handle is passed a copy of this structure as its "segconfig"
+argument, allowing additional parameters to be passed.
+
+Function arguments are:
+  "wavedata":  The data trace to examine.
+  "samprate":  The number of samples per second in the signal data.
+  "bpfband" [min max]:  The frequency band of interest. Edges may fade.
+  "segconfig":  A copy of this structure, containing additional parameters.
+
+Function return values are:
+  "events":  An array of event record structures per EVENTFORMAT.txt.
+    Only the "sampstart" and "duration" fields are provided.
+  "waves":   A structure containing new waveforms derived from "wavedata".
+    These typically include a band-pass-filtered waveform and its Hilbert
+    transform magnitude, phase, and frequency series.
+
+
+== "mag" type:
+
+Detection looking for excursions in analytic signal magnitude.
+As "magdual", but omitting "dbend".
+
+
+
+== "magdual" type:
+
+Detection looking for excursions in analytic signal magnitude.
+
+"qlong":    Time constant for DC-average filtering, as a multiple of the
+            nominal oscillation period.
+"qdrop":    Maximum gap in detection to ignore, as a multiple of the nominal
+            oscillation period.
+"qglitch":  Maximum spurious detection to ignore, as a multiple of the nominal
+            oscillation period.
+"dbpeak":   Minimum power ratio (in dB) above background for event detection.
+"dbend":    Minimum power ratio (in dB) above background at the edges of a
+            detected event. This is used to determine event boundaries.
+
+The standard "3 sigma" heuristic for detection corresponds to a "dbpeak"
+value of 9.5 dB. A typical "dbend" value is 2 dB.
+
+
+
+== "freq" type:
+
+Detection looking for stabilization of analytic signal frequency.
+As "freqdual", but omitting "dbend".
+
+
+
+== "freqdual" type:
+
+Detection looking for stabilization of analytic signal frequency.
+
+This involves adding high-frequency noise to the band-pass-filtered signal;
+oscillations with amplitude significantly higher than the HF noise floor
+stabilize the analytic signal's computed frequency (derivative of phase).
+
+"noiseband":  [min max]  Frequency band for noise injection.
+"noisesnr":   Ratio of signal power to injected noise power (in dB).
+"qlong":    Time constant for DC-average filtering, as a multiple of the
+            nominal oscillation period.
+"qshort":   Time constant for smoothing analytic signal frequency, as a
+            multiple of the nominal oscillation period.
+"qdrop":    Maximum gap in detection to ignore, as a multiple of the nominal
+            oscillation period.
+"qglitch":  Maximum spurious detection to ignore, as a multiple of the nominal
+            oscillation period.
+"dbpeak":   Minimum noise power suppression ratio (in dB) for event detection.
+"dbend":    Minimum noise power suppression ratio (in dB) at the edges of a
+            detected event. This is used to determine event boundaries.
+
+The noise band's low frequency edge is typically at least 10 times the event
+band's upper frequency edge.
+The standard "3 sigma" heuristic for detection corresponds to a "dbpeak"
+value of 9.5 dB. A typical "dbend" value is 2 dB.
+
+
+
+This is the end of the file.

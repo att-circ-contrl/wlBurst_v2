@@ -1,0 +1,32 @@
+The "event matrix" structure holds event information extracted from Field
+Trip data. This data is kept in wlBurst library format, to avoid discarding
+metadata and diagnostic information. This may be converted to and from
+the "event FT" format, with the loss of some metadata.
+
+An "event matrix" structure contains the following fields, which hold data
+returned by "wlProc_doSegmentAndParamExtract":
+
+- "events{bidx, tidx, cidx}" holds event lists corresponding to a given
+  band, FT trial, and channel within the FT trial.
+
+- "waves{bidx, tidx, cidx}" holds diagnostic waveform information from a
+  given band, FT trial, and channel within the FT trial. This includes
+  raw FT trial waveforms ("ftwave") and FT timestamps ("fttimes").
+
+- "auxdata{bidx, tidx, cidx}" holds auxiliary diagnostic data from a given
+  band, FT trial, and channel within the FT trial.
+
+The following additional fields are also present:
+
+- "bandinfo" is an array of structures with the following fields:
+  "band" [ min max ] defines a frequency band of interest.
+  "name" is a character array containing a human-readable band name.
+  "label" is a character array containing a filename-safe band ID string.
+
+- "samprate" is the sampling rate (samples per second).
+
+- "segconfigbyband{bidx}" records segmentation algorithm information per
+  "SEGCONFIG.txt".
+
+- "paramconfigbyband{bidx}" records parameter estimation algorithm
+  information per "PARAMCONFIG.txt".

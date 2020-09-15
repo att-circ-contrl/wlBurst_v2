@@ -1,0 +1,25 @@
+The "figure configuration information" structure contains the following
+fields:
+
+General parameters:
+
+"fig"		- A figure handle to perform rendering on.
+"outdir"	- The directory to write figure files to.
+
+"fsamp"		- Time series sampling rate. Used for spectrum plots.
+
+Spectrum plot tuning parameters [typical values in square brackets]:
+
+"psfres"	- Frequency resolution, Hz. [20]
+"psolap"	- Overlap between time and frequency bins, percent. [99]
+"psleak"	- "Leakage" between bins (0.5 = Hann window, 1.0 = square).
+		  [0.75]
+"psylim"	- Maximum frequency plotted. [50]
+
+
+
+Tuning time/frequency plots is a black art. A useful introduction is at:
+https://www.mathworks.com/help/signal/examples/practical-introduction-to-time-frequency-analysis.html
+
+Details of the implementation of the "pspectrum" function are at:
+https://www.mathworks.com/help/signal/ref/pspectrum.html

@@ -1,0 +1,15 @@
+A "comparison function" is used for determining whether two oscillatory
+burst event descriptions refer to the same event or different events, and
+to meansure the "distance" between oscillatory burst events in parameter
+space.
+
+The implementation of this function is arbitrary; comparison functions are
+passed as "lambda functions" (functiton handles) to library functions that
+need them.
+
+An event comparison function has the form:
+
+[ ismatch distance ] = comparefunc(evfirst, evsecond)
+
+The value of "ismatch" should be boolean.
+The value of "distance" should be a non-negative scalar.

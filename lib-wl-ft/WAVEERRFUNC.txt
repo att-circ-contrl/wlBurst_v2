@@ -1,0 +1,27 @@
+A "wave error function" is used for evaluating the "error" (distance) between
+an event and a reference waveform. Typically this is done via time-domain
+comparison between the event waveform and reference waveform, but other
+approaches are possible.
+
+The implementation of this function is arbitrary; wave error functions are
+passed as "lambda functions" (function handles) to library functions that
+need them.
+
+
+A wave error function has the form:
+
+error = errfunc(event, wavestruct)
+
+The value of "error" should be a non-negative scalar.
+
+"event" is an event record, per EVENTFORMAT.txt.
+"wavestruct" is a structure containing one or more reference waveforms. This
+  is typically one cell extracted from the "waves" field of an event matrix,
+  per EVMATRIX.txt.
+
+
+An example implementation is:
+
+waveerrfunc_bpf = @(thisev, thiswave) ...
+  wlProc_calcWaveErrorRelative( thiswave.bpfwave, thisev.sampstart, ...
+    thisev.wave, thisev.s1 );
