@@ -43,7 +43,7 @@ else
   noisegen = dsp.ColoredNoise('Color',colortype,'SamplesPerFrame',sampcount);
   noisevec = noisegen();
   % Turn this into a [1xN] vector.
-  noisevec = noisevec.';
+  noisevec = transpose(noisevec);
 
   % Band-pass filter the noise.
   % Default steepness is fine.

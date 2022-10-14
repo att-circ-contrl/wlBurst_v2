@@ -22,6 +22,15 @@
 
 * Integrate Charlie's wavelet algorithms, or a variant thereof.
 
+* Make the equivalent of wlAux_getContextTrace() that works in the opposite
+  direction, taking an event waveform and producing a time series or sample
+  index series that matches the original waveform's. The goal is to plot
+  multiple events against a reference wave.
+
+* Make a function that calculates the flank and extreme endpoint locations
+  of an event in the original waveform. Louie had a bit of trouble decyphering
+  EVENTFORMAT.txt for this.
+
 
 
 ## Deferred to version 3:
