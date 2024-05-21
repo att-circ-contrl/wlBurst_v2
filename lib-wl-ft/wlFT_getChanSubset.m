@@ -27,7 +27,7 @@ newlabels = {};
 
 for nidx = 1:length(chanlist)
 
-  thisname = chanlist(nidx);
+  thisname = chanlist{nidx};
   found = false;
 
   for cidx = 1:length(oldftdata.label)
