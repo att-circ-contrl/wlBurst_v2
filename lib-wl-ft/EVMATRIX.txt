@@ -3,6 +3,7 @@ Trip data. This data is kept in wlBurst library format, to avoid discarding
 metadata and diagnostic information. This may be converted to and from
 the "event FT" format, with the loss of some metadata.
 
+
 An "event matrix" structure contains the following fields, which hold data
 returned by "wlProc_doSegmentAndParamExtract":
 
@@ -15,6 +16,7 @@ returned by "wlProc_doSegmentAndParamExtract":
 
 - "auxdata{bidx, tidx, cidx}" holds auxiliary diagnostic data from a given
   band, FT trial, and channel within the FT trial.
+
 
 The following additional fields are also present:
 
@@ -30,3 +32,6 @@ The following additional fields are also present:
 
 - "paramconfigbyband{bidx}" records parameter estimation algorithm
   information per "PARAMCONFIG.txt".
+
+
+(This is the end of the file.)

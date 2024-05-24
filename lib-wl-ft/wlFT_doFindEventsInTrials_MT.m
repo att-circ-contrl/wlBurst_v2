@@ -58,6 +58,10 @@ tattleconfigs = false;
 ftrate = wlFT_getSamplingRate(trialftdata);
 
 
+% Get the trial start samples (from sampleinfo).
+fttrialstarts = wlFT_getTrialStartSamples(trialftdata);
+
+
 % Initialize the "event matrix" structure.
 
 % NOTE - struct() requires cell arrays to be wrapped by single-cell
@@ -246,6 +250,7 @@ parfor indidx = 1:indmax
 
         % Event location.
 
+        thisev.auxdata.ft_trialstart = fttrialstarts(tidx);
         thisev.auxdata.ft_sampstart = firstsamp;
         thisev.auxdata.ft_sampend = firstsamp + eventsamps - 1;
         thisev.auxdata.ft_trialnum = tidx;

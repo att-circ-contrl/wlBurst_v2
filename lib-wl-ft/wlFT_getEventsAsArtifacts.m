@@ -53,8 +53,9 @@ for bidx = 1:bandcount
 
       for eidx = 1:length(thisevlist)
         thisev = thisevlist(eidx);
-        sampstart = thisev.sampstart;
-        sampend = sampstart + round(thisev.s2 - thisev.s1);
+
+        sampstart = thisev.sampstart + thisev.auxdata.ft_trialstart;
+        sampend = sampstart + (thisev.s2 - thisev.s1);
 
         startendtable = [ startendtable ; sampstart, sampend ];
         chantable = [ chantable ; ftlabels(cidx) ];

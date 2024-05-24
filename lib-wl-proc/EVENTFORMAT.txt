@@ -1,6 +1,8 @@
 Events are described by structures with the following fields. Some of these
-may be omitted, depending on the function producing the event list:
+may be omitted, depending on the function producing the event list.
 
+
+Event metadata:
 
 "sampstart":  Sample index in the original recording waveform corresponding
               to burst time 0.
@@ -11,6 +13,7 @@ may be omitted, depending on the function producing the event list:
 "samprate":   Samples per second in the stored waveforms.
 
 "snr":        Nominal signal-to-noise ratio for this burst, in dB.
+
 
 Curve-fit parameters:
 
@@ -28,6 +31,7 @@ Curve-fit parameters:
 "ftype":      Frequency ramp type ("linear" or "logarithmic").
 "atype":      Amplitude ramp type ("linear" or "logarithmic").
 
+
 Curve-fit waveform:
 
 "times":      [1xN] array of burst sample times, relative to start time.
@@ -35,6 +39,7 @@ Curve-fit waveform:
 "mag":        [1xN] array of nominal envelope magnitude samples.
 "freq":       [1xN] array of nominal instantaneous frequency samples.
 "phase":      [1xN] array of nominal instantaneous phase samples (in radians).
+
 
 Auxiliary waveforms (optional; typically algorithm-specific):
 
@@ -48,6 +53,9 @@ Auxiliary waveforms (optional; typically algorithm-specific):
   "FOOfreq":     [1xN] array with signal FOO's instantaneous frequency.
   "FOOphase" :   [1xN] array with signal FOO's instantaneous phase.
 
+  Field Trip waves are as follows:
+
+
 Auxiliary metadata (optional; typically algorithm-specific):
 
 "auxdata":   Structure containing algorithm-specific event metadata.
@@ -55,3 +63,24 @@ Auxiliary metadata (optional; typically algorithm-specific):
   Metadata labels are arbitrary but typically have the following form:
 
   "FOOstat":     Statistic "stat" for algorithm/processing step "FOO".
+
+  Field Trip metadata is as follows:
+
+  ft_trialstart:   Index of the trial's first sample in continuous data
+                   (from the first column of ftdata.sampleinfo).
+  ft_sampstart:    Index of "sampstart" in the curve-fit wave relative to
+                   t=0 in the Field Trip trial.
+  ft_sampend:      Index of "sampend" in the curve-fit wave relative to
+                   t=0 in the Field Trip trial.
+  ft_trialnum:     Field Trip trial index.
+  ft_channelnum:   Field Trip channel index.
+  ft_bandnum:      Band index from the list of bands supplied to
+                   wlFT_doFindEventsInTrials.
+  ft_bandmin:      Lower corner frequency of the band.
+  ft_bandmax:      Upper corner frequency of the band.
+  ft_eventnum:     Event index in the list of detected events in this trial.
+
+  Additional metadata from Field Trip curve fits is also recorded.
+
+
+(This is the end of the file.)
