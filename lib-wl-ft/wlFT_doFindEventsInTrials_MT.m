@@ -247,12 +247,26 @@ parfor indidx = 1:indmax
 
         eventsamps = length(thisev.wave);
         firstsamp = thisev.sampstart + round(thisev.times(1) * ftrate);
+        lastsamp = firstsamp + eventsamps - 1;
+
+        % FIXME - Nudge the input sample range if rounding gives an
+        % off-by-1 problem.
+
+        if firstsamp < 1
+          lastsamp = lastsamp + (1 - firstsamp);
+          firstsamp = 1;
+        end
+
+        if lastsamp > length(sampdata)
+          firstsamp = firstsamp + (length(sampdata) - lastsamp);
+          lastsamp = length(sampdata);
+        end
 
         % Event location.
 
         thisev.auxdata.ft_trialstart = fttrialstarts(tidx);
         thisev.auxdata.ft_sampstart = firstsamp;
-        thisev.auxdata.ft_sampend = firstsamp + eventsamps - 1;
+        thisev.auxdata.ft_sampend = lastsamp;
         thisev.auxdata.ft_trialnum = tidx;
         thisev.auxdata.ft_channelnum = cidx;
         thisev.auxdata.ft_bandnum = bidx;

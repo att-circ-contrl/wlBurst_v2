@@ -46,6 +46,28 @@ eventftdata.wlnotes.segconfigbyband = eventmatrixdata.segconfigbyband;
 eventftdata.wlnotes.paramconfigbyband = eventmatrixdata.paramconfigbyband;
 
 
+% Figure out which context waves we have.
+
+scratch = struct();
+if (bandcount > 0) && (trialcount > 0) && (chancount > 0)
+  scratch = eventmatrixdata.waves{1,1,1};
+end
+have_context_bpf = isfield(scratch, 'bpfwave');
+have_context_ftwb = isfield(scratch, 'ftwave');
+
+% Add the context waves to the channel list.
+
+context_bpf_idx = NaN;
+context_ftwb_idx = NaN;
+if have_context_bpf
+  eventftdata.label = [ eventftdata.label { 'origbpf' } ];
+  context_bpf_idx = length(eventftdata.label);
+end
+if have_context_ftwb
+  eventftdata.label = [ eventftdata.label { 'origwb' } ];
+  context_ftwb_idx = length(eventftdata.label);
+end
+
 
 %
 % Copy the events to the Field Trip data structure.
@@ -55,6 +77,10 @@ evtrialcount = 0;
 
 auxnamelut = {};
 
+% We need to pretend all of these fake trials came from non-overlapping
+% parts of a continuous recording.
+fakeoffset = 0;
+
 for bidx = 1:bandcount
 
   for tidx = 1:trialcount
@@ -63,9 +89,11 @@ for bidx = 1:bandcount
 
       % Store trial waveforms.
       % FIXME - If this is a full copy, we can do it outside the loop.
+      % We do need this in-loop to get context waveforms.
 
+      contextwaves = eventmatrixdata.waves{bidx, tidx, cidx};
       eventftdata.wlnotes.wavesbybandandtrial{bidx, tidx, cidx} = ...
-        eventmatrixdata.waves{bidx, tidx, cidx};
+        contextwaves;
 
 
       % FIXME - Discarding everything in "eventmatrixdata.auxdata".
@@ -117,8 +145,31 @@ for bidx = 1:bandcount
         eventftdata.trial{evtrialcount}(3,:) = thisev.freq;
         eventftdata.trial{evtrialcount}(4,:) = thisev.phase;
 
+        % Get the span in the original trial.
+        % FIXME - We might want to add a halo around this.
+
+        sampstart = thisev.auxdata.ft_sampstart;
+        sampend = thisev.auxdata.ft_sampend;
+
+        % Add context waves from this span.
+
+        if have_context_bpf
+          eventftdata.trial{evtrialcount}(context_bpf_idx,:) = ...
+            contextwaves.bpfwave(sampstart:sampend);
+        end
+        if have_context_ftwb
+          eventftdata.trial{evtrialcount}(context_ftwb_idx,:) = ...
+            contextwaves.ftwave(sampstart:sampend);
+        end
+
+        % Add sampleinfo segmentation information.
+        % NOTE - We have to pretend these events came from non-overlapping
+        % portions of a single continuous recording.
+
+        sampcount = 1 + sampend - sampstart;
         eventftdata.sampleinfo(evtrialcount,:) = ...
-          [ thisev.auxdata.ft_sampstart thisev.auxdata.ft_sampend ];
+          [ (fakeoffset + 1), (fakeoffset + sampcount) ];
+        fakeoffset = fakeoffset + sampcount;
 
         % Copy relevant auxdata entries.
         % FIXME - Discarding non-fieldtrip auxdata entries.
