@@ -12,9 +12,9 @@ function wlPlot_plotEventsWithAux(cfg, evlist, evstride, ...
 % "evstride" suppresses plots; one out of every "evstride" events is plotted.
 % "topcurves", "midcurves", and "botcurves" are cell arrays describing pane
 %   contents. The first element is the pane's subtitle prefix; remaining
-%   elements are "auxwaves" curve labels for time series and data series
-%   followed by plotting colours (RGB triplets), in the order in which the
-%   curves are to be plotted.
+%   elements are groups of three cells containing "auxwaves" curve labels
+%   for time series, curve labels for data series, and plotting colours (RGB
+%   triplets), for each curve to be plotted.
 % "figtitle" is the title to apply to the figure. Subfigures have a prefix
 %   prepended to this title. The event number is appended.
 % "filelabel" is used within the figure filename to identify this figure.
