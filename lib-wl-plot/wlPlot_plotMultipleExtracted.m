@@ -43,7 +43,7 @@ hold off;
 % Not sure why this changed.
 set(gca, 'Box', 'on');
 
-title(sprintf('Waveform - %s', figtitle));
+title(sprintf('Wave - %s', figtitle));
 xlabel('Time (s)');
 ylabel('Amplitude (a.u.)');
 
@@ -62,7 +62,7 @@ hold off;
 % Not sure why this changed.
 set(gca, 'Box', 'on');
 
-title(sprintf('Frequency - %s', figtitle));
+title(sprintf('Freq - %s', figtitle));
 xlabel('Time (s)');
 ylabel('Frequency (Hz)');
 
