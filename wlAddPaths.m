@@ -21,6 +21,7 @@ addpath([ thisdir filesep 'lib-wl-aux' ]);
 addpath([ thisdir filesep 'lib-wl-ft' ]);
 addpath([ thisdir filesep 'lib-wl-plot' ]);
 addpath([ thisdir filesep 'lib-wl-proc' ]);
+addpath([ thisdir filesep 'lib-wl-stats' ]);
 addpath([ thisdir filesep 'lib-wl-synth' ]);
 
 
