@@ -15,14 +15,14 @@ function [ rate_avg rate_dev rate_sem ] = wlStats_getMatrixBurstRates( ...
 %   to estimate it by dividing the deviation by the square root of the number
 %   of trials.
 %
-% "rate_avg" is a cell array indexed by {bidx, cidx, widx} that holds the
-%   burst rate (bursts per second) observed for each band, channel, and time
+% "rate_avg" is a matrix indexed by (bidx, cidx, widx) that holds the burst
+%   rate (bursts per second) observed for each band, channel, and time
 %   window, averaged across trials.
-% "rate_dev" is a cell array per "rate_avg" holding the standard deviation
-%   of the burst rate across trials.
-% "rate_sem" is a cell array per "rate_avg" holding the standard error of
-%   the mean of the burst rate (the estimated standard deviation of the
-%   value of "rate_avg").
+% "rate_dev" is a matrix per "rate_avg" holding the standard deviation of the
+%   burst rate across trials.
+% "rate_sem" is a matrix per "rate_avg" holding the standard error of the
+%   mean of the burst rate (the estimated standard deviation of the value
+%   of "rate_avg").
 
 
 % Get dimensions and initialize.
