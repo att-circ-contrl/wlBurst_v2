@@ -56,12 +56,17 @@ for bidx = 1:bandcount
 
       for widx = 1:wincount
         thiswin = time_bins_sec{widx};
-        thiswinsize = max(thiswin) - min(thiswin);
+
+        % Clamp the time window to the actual time range.
+        thiswin = [ min(thiswin) max(thiswin) ];
+        thiswin(1) = max( thiswin(1), min(thistimeseries) );
+        thiswin(2) = min( thiswin(2), max(thistimeseries) );
 
         thiswinevents = ...
           wlAux_selectEventsByTime( thisevlist, thiswin, thistimeseries );
 
         % Rate is event count divided by window duration.
+        thiswinsize = max(thiswin) - min(thiswin);
         ratescratch(tidx,widx) = length(thiswinevents) / thiswinsize;
       end
     end

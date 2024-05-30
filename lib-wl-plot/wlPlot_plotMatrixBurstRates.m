@@ -137,6 +137,8 @@ for cidx = 1:chancount
 
       legend('Location', 'northwest');
       title([ figtitle ' - ' bandtitles{bidx} ' - ' chantitles{cidx} ]);
+      xlabel('Time (s)');
+      ylabel('Burst Rate (per second)');
 
       saveas( cfg.fig, [ cfg.outdir filesep 'rates-' filelabel '-' ...
         bandlabels{bidx} '-' chanlabels{cidx} '.png' ] );
@@ -147,11 +149,131 @@ for cidx = 1:chancount
 
   else
 
+    % Only one time window.
     % Plot one figure, with band as the independent axis.
 
-% FIXME - NYI.
-%clf('reset');
+    thisravg = rate_avg(:,cidx,1);
+    thisrdev = rate_dev(:,cidx,1);
+    thisrsem = rate_sem(:,cidx,1);
 
+    thisravg = reshape(thisravg, 1, []);
+    thisrdev = reshape(thisrdev, 1, []);
+    thisrsem = reshape(thisrsem, 1, []);
+
+    thisbgavg = bg_avg(:,cidx,1);
+    thisbgdev = bg_dev(:,cidx,1);
+    thisbgsem = bg_sem(:,cidx,1);
+
+    thisbgavg = reshape(thisbgavg, 1, []);
+    thisbgdev = reshape(thisbgdev, 1, []);
+    thisbgsem = reshape(thisbgsem, 1, []);
+
+    clf('reset');
+    hold on;
+
+% FIXME - Testing different plot types.
+if false
+
+    % Line plot.
+
+    % Implicit X axis is 1..bandcount.
+
+    plot( thisravg, '-', 'Color', colrate, ...
+      'DisplayName', 'burst rate' );
+
+    plot( thisravg + thisrsem, '--', 'Color', colrate, ...
+      'HandleVisibility', 'off' );
+    plot( thisravg - thisrsem, '--', 'Color', colrate, ...
+      'HandleVisibility', 'off' );
+
+    plot( thisravg + thisrdev, ':', 'Color', colrate, ...
+      'HandleVisibility', 'off' );
+    plot( thisravg - thisrdev, ':', 'Color', colrate, ...
+      'HandleVisibility', 'off' );
+
+
+    plot( thisbgavg, '-', 'Color', colbg, ...
+      'DisplayName', 'background' );
+
+    plot( thisbgavg + thisbgsem, '--', 'Color', colbg, ...
+      'HandleVisibility', 'off' );
+    plot( thisbgavg - thisbgsem, '--', 'Color', colbg, ...
+      'HandleVisibility', 'off' );
+
+    plot( thisbgavg + thisbgdev, ':', 'Color', colbg, ...
+      'HandleVisibility', 'off' );
+    plot( thisbgavg - thisbgdev, ':', 'Color', colbg, ...
+      'HandleVisibility', 'off' );
+
+
+    plot( nan, nan, '--', 'Color', colblk, 'DisplayName', 's.e.m.' );
+    plot( nan, nan, ':', 'Color', colblk, 'DisplayName', 's.d.' );
+
+elseif false
+
+    % Bar graph with error bar annotations.
+
+    bardata = flip([ thisravg ; thisbgavg ]);
+
+    barobjlist = bar( 1:bandcount, bardata );
+
+    barobjlist(1).FaceColor = colrate;
+    barobjlist(1).DisplayName = 'burst rate';
+
+    barobjlist(2).FaceColor = colbg;
+    barobjlist(2).DisplayName = 'background';
+
+    % NOTE - We don't have a good way to get error bars on this.
+    % We'd need to know where the bar centres are, _and_ Matlab's z-ordering
+    % is iffy.
+
+else
+
+    % Scatter plot with error bars.
+
+    % Implicit X axis is 1..bandcount.
+
+    % NOTE - The line style only applies to the (nonexistent) line, not to
+    % the error bars!
+
+    errortime = 1:bandcount;
+
+    errorbar( errortime - 0.1, thisravg, thisrsem, ...
+      's', 'LineStyle', 'none', 'CapSize', 30, ...
+      'Color', colrate, 'DisplayName', 'burst rate' );
+    errorbar( errortime - 0.1, thisravg, thisrdev, ...
+      's', 'LineStyle', 'none', 'CapSize', 15, ...
+      'Color', colrate, 'HandleVisibility', 'off' );
+
+    errorbar( errortime + 0.1, thisbgavg, thisbgsem, ...
+      's', 'LineStyle', 'none', 'CapSize', 30, ...
+      'Color', colbg, 'DisplayName', 'background' );
+    errorbar( errortime + 0.1, thisbgavg, thisbgdev, ...
+      's', 'LineStyle', 'none', 'CapSize', 15, ...
+      'Color', colbg, 'HandleVisibility', 'off' );
+
+    xlim([0 (bandcount+1)]);
+
+%    plot( nan, nan, '--', 'Color', colblk, 'DisplayName', 's.e.m.' );
+%    plot( nan, nan, ':', 'Color', colblk, 'DisplayName', 's.d.' );
+
+% FIXME - The right way to plot this is probably a box chart.
+
+end
+
+
+    hold off;
+
+    legend('Location', 'northwest');
+    title([ figtitle ' - ' chantitles{cidx} ]);
+    xlabel('Frequency Band');
+    ylabel('Burst Rate (per second)');
+
+    % Use band names as the tick labels.
+    set( gca, 'XTick', 1:bandcount, 'XTickLabel', bandtitles );
+
+    saveas( cfg.fig, [ cfg.outdir filesep 'rates-' filelabel '-byband-' ...
+      chanlabels{cidx} '.png' ] );
 
   end
 
