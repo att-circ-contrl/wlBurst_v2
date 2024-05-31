@@ -31,6 +31,7 @@ REFAUTO=\
 	$(REFNAME)-ft.tex		\
 	$(REFNAME)-plot.tex		\
 	$(REFNAME)-proc.tex		\
+	$(REFNAME)-stats.tex		\
 	$(REFNAME)-synth.tex		\
 	$(REFNAME)-formats.tex
 
@@ -111,6 +112,9 @@ $(REFNAME).pdf: $(REFBITS)
 	./copy-code.pl --outfile=$(REFNAME)-proc.tex --matlabdoc \
 		"--chapter=\`\`wlProc'' Functions" "--label=sect-proc" \
 		../lib-wl-proc/*.m
+	./copy-code.pl --outfile=$(REFNAME)-stats.tex --matlabdoc \
+		"--chapter=\`\`wlStats'' Functions" "--label=sect-stats" \
+		../lib-wl-stats/*.m
 	./copy-code.pl --outfile=$(REFNAME)-synth.tex --matlabdoc \
 		"--chapter=\`\`wlSynth'' Functions" "--label=sect-synth" \
 		../lib-wl-synth/*.m
