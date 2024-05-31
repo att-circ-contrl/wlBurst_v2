@@ -154,7 +154,7 @@ for cidx = 1:chancount
       legend('Location', 'northwest');
       title([ figtitle ' - ' bandtitles{bidx} ' - ' chantitles{cidx} ]);
       xlabel( timetitle );
-      ylabel('Burst Probability');
+      ylabel('Number of Bursts');
 
       saveas( cfg.fig, [ cfg.outdir filesep 'rates-' filelabel '-' ...
         bandlabels{bidx} '-' chanlabels{cidx} '.png' ] );
