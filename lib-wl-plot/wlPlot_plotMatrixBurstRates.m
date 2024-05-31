@@ -149,6 +149,10 @@ for cidx = 1:chancount
       plot( nan, nan, ':', 'Color', colblk, 'DisplayName', 's.d.' );
 
 
+      % Draw a horizontal axis line.
+      plot( [ min(timebins) max(timebins) ], [ 0 0 ], ...
+        'Color', colgry, 'HandleVisibility', 'off' );
+
       hold off;
 
       legend('Location', 'northwest');
