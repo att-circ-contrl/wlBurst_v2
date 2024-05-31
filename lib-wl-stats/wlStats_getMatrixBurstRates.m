@@ -7,6 +7,10 @@ function [ rate_avg rate_dev rate_sem ] = wlStats_getMatrixBurstRates( ...
 % This computes the average burst rate across trials within a set of
 % time bins. Statistics are estimated via bootstrapping.
 %
+% "Burst rate" is the average number of bursts overlapping a given time
+% window. In  most cases, this will be very much less than 1, and can be
+% interpreted as "burst probability" within that window.
+%
 % "detectmatrix" is an event matrix structure per EVMATRIX.txt.
 % "time_bins_sec" is a cell array. Each cell contains a [ min max ] time pair
 %   specifying time bin extents in seconds.
@@ -16,8 +20,8 @@ function [ rate_avg rate_dev rate_sem ] = wlStats_getMatrixBurstRates( ...
 %   of trials.
 %
 % "rate_avg" is a matrix indexed by (bidx, cidx, widx) that holds the burst
-%   rate (bursts per second) observed for each band, channel, and time
-%   window, averaged across trials.
+%   rate (expected number of bursts) observed for each band, channel, and
+%   time window, averaged across trials.
 % "rate_dev" is a matrix per "rate_avg" holding the standard deviation of the
 %   burst rate across trials.
 % "rate_sem" is a matrix per "rate_avg" holding the standard error of the
@@ -64,10 +68,15 @@ for bidx = 1:bandcount
 
         thiswinevents = ...
           wlAux_selectEventsByTime( thisevlist, thiswin, thistimeseries );
+        thisrate = length(thiswinevents);
 
-        % Rate is event count divided by window duration.
-        thiswinsize = max(thiswin) - min(thiswin);
-        ratescratch(tidx,widx) = length(thiswinevents) / thiswinsize;
+% FIXME - Normalizing by window size doesn't give bursts per second!
+% We'd have to factor in burst duration.
+%        % Rate is event count divided by window duration.
+%        thiswinsize = max(thiswin) - min(thiswin);
+%        thisrate = thisrate / thiswinsize;
+
+        ratescratch(tidx,widx) = thisrate;
       end
     end
 

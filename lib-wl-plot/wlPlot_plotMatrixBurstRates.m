@@ -1,20 +1,25 @@
 function wlPlot_plotMatrixBurstRates(cfg, ...
   rate_avg, rate_dev, rate_sem, bg_avg, bg_dev, bg_sem, ...
   timebins, bandtitles, bandlabels, channelnames, ...
-  figtitle, filelabel)
+  figtitle, filelabel, timetitle)
 
 % function wlPlot_plotMatrixBurstRates(cfg, ...
 %   rate_avg, rate_dev, rate_sem, bg_avg, bg_dev, bg_sem, ...
 %   timebins, bandtitles, bandlabels, channelnames, ...
-%   figtitle, filelabel)
+%   figtitle, filelabel, timetitle)
 %
 % This function plots burst rate data returned by wlStats_getMatrixBurstRates.
 %
 % If only one time window is present, one plot per channel is generated, with
-% band as the independent variable.
+% frequency band as the independent variable.
 %
 % If multiple time windows are present, multiple plots per channel are
 % generated (one per band), with time as the independent variable.
+%
+% The "timetitle" argument is optional. If given, it overrides the time
+% axis label (which defaults to "Time (s)"). This is intended to be used
+% to plot detection against threshold or other independent parameters,
+% in addition to window time.
 %
 % "cfg" contains figure configuration information (per "FIGCONFIG.txt").
 % "rate_avg" contains burst rates, indexed by (bidx, cidx, widx).
@@ -33,6 +38,10 @@ function wlPlot_plotMatrixBurstRates(cfg, ...
 %   from Field Trip's "label" field).
 % "figtitle" is the title to apply to the figure series.
 % "filelabel" is used within figure filenames to identify this figure series.
+% "timetitle" (optional) is a character vector indicating the time axis label
+%   in plots. If this argument is omitted, it defaults to 'Time (s)'.
+%
+% No return value.
 
 
 % Get dimensions.
@@ -62,10 +71,17 @@ timebins = reshape(timebins, 1, []);
 [ chanlabels chantitles ] = wlAux_makeSafeString( channelnames );
 
 
+% Set the time axis label.
+if ~exist('timetitle', 'var')
+  timetitle = 'Time (s)';
+end
+
+
 % Set up the palette.
 colrate = [ 0.0 0.4 0.7 ];
 colbg = [ 0.9 0.7 0.1 ];
 colblk = [ 0 0 0 ];
+colgry = [ 0.7 0.7 0.7 ];
 
 
 %
@@ -137,8 +153,8 @@ for cidx = 1:chancount
 
       legend('Location', 'northwest');
       title([ figtitle ' - ' bandtitles{bidx} ' - ' chantitles{cidx} ]);
-      xlabel('Time (s)');
-      ylabel('Burst Rate (per second)');
+      xlabel( timetitle );
+      ylabel('Burst Probability');
 
       saveas( cfg.fig, [ cfg.outdir filesep 'rates-' filelabel '-' ...
         bandlabels{bidx} '-' chanlabels{cidx} '.png' ] );
@@ -261,13 +277,16 @@ else
 
 end
 
+    % Draw a horizontal axis line.
+    plot( [0 (bandcount+1)], [ 0 0 ], ...
+      'Color', colgry, 'HandleVisibility', 'off' );
 
     hold off;
 
     legend('Location', 'northwest');
     title([ figtitle ' - ' chantitles{cidx} ]);
     xlabel('Frequency Band');
-    ylabel('Burst Rate (per second)');
+    ylabel('Number of Bursts');
 
     % Use band names as the tick labels.
     set( gca, 'XTick', 1:bandcount, 'XTickLabel', bandtitles );
