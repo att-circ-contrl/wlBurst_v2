@@ -29,6 +29,8 @@ structures and interconvert with Field Trip's data format.
 quick-and-dirty routines for testing, rather than for publishable graphs.
 * lib-wl-proc -- Functions that perform segmentation and feature extraction
 on oscillatory burst events in LFP signals.
+* lib-wl-stats -- Functions that estimate burst rates across trials and that
+produce confidence intervals and background estimates for these rates.
 * lib-wl-synth -- Functions for generating synthetic LFP waveforms with
 known ground truth for testing.
 
