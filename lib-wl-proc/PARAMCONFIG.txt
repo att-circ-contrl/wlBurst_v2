@@ -46,6 +46,15 @@ Function return values are:
 
 
 
+== "fast" type:
+
+The event endpoints are kept as-is, a fixed roll-off window is assumed, and
+magnitude and frequency are curve-fit to the event.
+
+There are no additional configuration parameters.
+
+
+
 == "grid" type:
 
 Amplitude envelope roll-on and roll-off are fit using a coarse grid search.

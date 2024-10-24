@@ -106,9 +106,10 @@ end
 
 % First, figure out which steps we want to perform.
 
+do_basic = false;
 do_gridseries = false;
-do_gridamp = false;
-do_gridwave = false;
+do_annealamp = false;
+do_annealwave = false;
 
 if ~isok
 
@@ -120,6 +121,10 @@ elseif strcmpi('custom', paramconfig.type)
   [ events, auxdata ] = paramconfig.paramfunc( ...
     segevents, waves, samprate, paramconfig );
 
+elseif strcmpi('fast', paramconfig.type)
+
+  do_basic = true;
+
 elseif strcmpi('grid', paramconfig.type)
 
   do_gridseries = true;
@@ -127,13 +132,13 @@ elseif strcmpi('grid', paramconfig.type)
 elseif strcmpi('annealamp', paramconfig.type)
 
   do_gridseries = true;
-  do_gridamp = true;
+  do_annealamp = true;
 
 elseif strcmpi('annealboth', paramconfig.type)
 
   do_gridseries = true;
-  do_gridamp = true;
-  do_gridwave = true;
+  do_annealamp = true;
+  do_annealwave = true;
 
 else
 
@@ -146,18 +151,35 @@ end
 
 % Now that we know what to do, call single- or multi-threaded implementations.
 
-if do_gridseries
+if do_basic
+
+  % Estimate parameters without a grid search.
+
+  events = wlProc_getEvParamsUsingHilbert( waves.bpfwave, samprate, ...
+    waves.bpfmag, waves.bpffreq, waves.bpfphase, segevents, NaN );
+
+elseif do_gridseries
+
+  % Use a grid search, and optionally anneal after the search.
 
   events = wlProc_getEvParamsUsingHilbert( waves.bpfwave, samprate, ...
     waves.bpfmag, waves.bpffreq, waves.bpfphase, segevents, ...
     paramconfig.gridsteps );
 
-  if do_gridamp
 
+  % Set up the match evaluation helper.
+
+  if do_annealamp || do_annealwave
     comparefunc = @(evfirst, evsecond) ...
       wlProc_calcMatchFromParams( evfirst, evsecond, ...
         paramconfig.matchfreq, paramconfig.matchamp, ...
         paramconfig.matchlength, paramconfig.matcholap );
+  end
+
+
+  % Fine-tune the envelope fit if desired.
+
+  if do_annealamp
 
     if wantmultithread
       [ events avgmaxtunnel avgendtotal convergefrac ] = ...
@@ -177,7 +199,10 @@ if do_gridseries
 
   end
 
-  if do_gridwave
+
+  % Fine-tune all curve-fit parameters if desired.
+
+  if do_annealwave
 
     if wantmultithread
       [ events avgmaxtunnel avgendtotal convergefrac ] = ...

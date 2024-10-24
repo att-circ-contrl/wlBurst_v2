@@ -19,7 +19,8 @@ function newevents = wlProc_getEvParamsUsingHilbert(data, samprate, ...
 % "oldevents" is the input event list. Only the "sampstart", "duration",
 %   and "samprate" fields must be present.
 % "gridsteps" is an optional argument specifying the number of steps to use
-%   when sweeping roll-on and roll-off times during curve fitting.
+%   when sweeping roll-on and roll-off times during curve fitting. If this
+%   is 0 or NaN, a single curve fit is performed without a roll-off search.
 %
 % "newevents" is an array of event record structures following the
 %   conventions given in EVENTFORMAT.txt. Curve fit parameters are generated,
@@ -30,9 +31,13 @@ function newevents = wlProc_getEvParamsUsingHilbert(data, samprate, ...
 %
 % Initialize.
 
+want_search = true;
+
 if ~exist('gridsteps', 'var')
   % Set a reasonable default.
   gridsteps = 5;
+elseif isnan(gridsteps) || (gridsteps < 2)
+  want_search = false;
 end
 
 
@@ -63,7 +68,11 @@ for evidx = 1:evcount
 
   % Fit the envelope.
 
-  thisnewevent = wlProc_fitAmpGrid(hilmag, thisnewevent, gridsteps);
+  if want_search
+    thisnewevent = wlProc_fitAmpGrid(hilmag, thisnewevent, gridsteps);
+  else
+    thisnewevent = wlProc_fitAmpBasic(hilmag, thisnewevent, 'auto');
+  end
 
 
   % Fit frequency and phase, now that we have final endpoints.
